@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreatePatientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,23 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('patients', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('email')->unique()->nullable();
-            $table->string('password')->nullable();
-            $table->string('address')->nullable();
-            $table->string('phone_number')->nullable();
+            $table->string('address');
             $table->date('dob');
+            $table->string('phone_number');
             $table->string('sex');
-            $table->unsignedInteger('role_id')->nullable();
-            $table->unsignedInteger('specialist_id')->nullable();
+            $table->string('history_of_allergy');
+            $table->unsignedInteger('patient_category_id');
             $table->softDeletes();
-            $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('patient_category_id')
+                ->references('id')
+                ->on('patient_categories')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
@@ -37,6 +40,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('patients');
     }
 }
